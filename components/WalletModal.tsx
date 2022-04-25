@@ -9,10 +9,15 @@ import connectImage from "../assets/WalletIcons/connect.png";
 import trustImage from "../assets/WalletIcons/trust.png";
 import binance from "../assets/WalletIcons/binance.png";
 import { WalletModalProps } from '../interfaces/WalletModalProps';
+import { metaMask } from '../connectors/metamask';
 
 export default function WalletModal({isEnabled, setIsEnabled} : WalletModalProps) {
     console.log(isEnabled)
     const router = useRouter();
+
+    const connect = async () => {
+        await metaMask.activate()
+    }
 
   return (
     <>
@@ -97,7 +102,7 @@ export default function WalletModal({isEnabled, setIsEnabled} : WalletModalProps
                                         <div className="row-span-1 flex justify-around">
                                             {/* Wallet connect */}
                                             <div
-                                                // onClick={() => connect("walletConnect")}
+                                                onClick={() => connect()}
                                                 className="  p-3 w-32 bg-white dark:bg-[#202225]  dark:text-gray-200 text-gray-900 flex flex-col rounded-md cursor-pointer"
                                             >
                                                 <img
