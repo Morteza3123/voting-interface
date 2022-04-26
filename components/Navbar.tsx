@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Hamburger from 'hamburger-react';
 import WalletModal from './WalletModal';
+import { useDispatch, useSelector, RootStateOrAny } from "react-redux";
 
 
 export default function Navbar() {
@@ -11,7 +12,8 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
 
-    
+  const walletAddress = useSelector((state: RootStateOrAny) => state.ConnectReducers.account); //* Get the wallet address from redux store *//
+    console.log(walletAddress)
   return (
     <>
       <div className='bg-[#2d2a2a] w-full h-16 border-b-3 flex items-center py-8 px-3 vs:justify-between'>
@@ -40,11 +42,28 @@ export default function Navbar() {
           <li className='cursor-pointer hover:text-gray-50 transition-all ease-linear duration-200'>
             <Link href='/Candidates'>Candidates</Link>
           </li>
-          <button 
-          onClick={() => setIsEnabled(true)}
-          className='btn btn-primary rounded-3xl'>
-            Connect
-          </button>
+
+          {walletAddress ? (
+
+            <button
+            className="bg-blue-600 dark:bg-blue-800 dark:text-gray-200  vs:text-xs sm:text-base p-2 px-4 rounded-xl text-slate-100 font-bold relative overflow-hidden cursor-default"
+            title="Wallet Address"
+            >
+              <div className="defaultBtn">
+              {`${walletAddress.slice(0, 5)}....${walletAddress.slice(
+                  -6,
+                  -1
+              )}`}
+              </div>
+            </button>
+          ) : (
+            <button
+            onClick={() => setIsEnabled(true)}
+            className='btn btn-primary mb-1'>
+                Connect
+            </button>
+          )}
+
         </ul>
 
       </div>
@@ -85,11 +104,26 @@ export default function Navbar() {
                     >
                         <Link href="/candidates">Candidates</Link>
                     </li>
-                    <button
-                    onClick={() => setIsEnabled(true)}
-                    className='btn btn-primary mb-1'>
-                       Connect
-                    </button>
+                    {walletAddress ? (
+
+                        <button
+                        className="bg-blue-600 dark:bg-blue-800 dark:text-gray-200  vs:text-xs sm:text-base p-2 px-4 rounded-xl text-slate-100 font-bold relative overflow-hidden cursor-default"
+                        title="Wallet Address"
+                        >
+                          <div className="defaultBtn">
+                          {`${walletAddress.slice(0, 5)}....${walletAddress.slice(
+                              -6,
+                              -1
+                          )}`}
+                          </div>
+                        </button>
+                        ) : (
+                        <button
+                        onClick={() => setIsEnabled(true)}
+                        className='btn btn-primary mb-1'>
+                            Connect
+                        </button>
+                        )}
           </ul>
         </div>
       ) : ("")}

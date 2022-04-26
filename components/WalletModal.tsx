@@ -10,14 +10,41 @@ import trustImage from "../assets/WalletIcons/trust.png";
 import binance from "../assets/WalletIcons/binance.png";
 import { WalletModalProps } from '../interfaces/WalletModalProps';
 import { metaMask } from '../connectors/metamask';
+import { walletConnect } from './Connectwallet';
+import { bscConnector } from './Binance';
 
 export default function WalletModal({isEnabled, setIsEnabled} : WalletModalProps) {
-    console.log(isEnabled)
+
     const router = useRouter();
 
-    const connect = async () => {
-        await metaMask.activate()
-    }
+
+    const connect = async (key: string) => {
+        if (key === "trustWallet") {
+            setIsEnabled(!isEnabled);
+            await walletConnect.activate();
+            localStorage.setItem("voting-Wallet", key);
+            router.push("/account");
+            //* *//
+        } else if (key === "metaMask") {
+            setIsEnabled(!isEnabled);
+            await metaMask.activate();
+            localStorage.setItem("voting-Wallet", key);
+            router.push("/account");
+            //* *//
+        } else if (key === "walletConnect") {
+            setIsEnabled(!isEnabled);
+            await walletConnect.activate();
+            localStorage.setItem("voting-Wallet", key);
+            router.push("/account");
+            //* *//
+        } else if (key === "binanceWallet") {
+            setIsEnabled(!isEnabled);
+            await bscConnector.activate();
+            localStorage.setItem("voting-Wallet", key);
+            router.push("/account");
+            //* *//
+        }
+    };
 
   return (
     <>
@@ -72,7 +99,7 @@ export default function WalletModal({isEnabled, setIsEnabled} : WalletModalProps
                                         <div className="row-span-1 flex justify-around">
                                             {/* Trust wallet */}
                                             <div
-                                                // onClick={() => connect("trustWallet")}
+                                                onClick={() => connect("trustWallet")}
                                                 className="  p-3 w-32 bg-white dark:bg-[#202225]  dark:text-gray-200 text-gray-900 flex flex-col rounded-md  cursor-pointer"
                                             >
                                                 <img
@@ -86,7 +113,7 @@ export default function WalletModal({isEnabled, setIsEnabled} : WalletModalProps
                                             </div>
                                             {/* Metamask wallet */}
                                             <div
-                                                // onClick={() => connect("metaMask")}
+                                                onClick={() => connect("metaMask")}
                                                 className="  p-3 w-32 bg-white dark:bg-[#202225]  dark:text-gray-200 text-gray-900 flex flex-col rounded-md cursor-pointer "
                                             >
                                                 <img
@@ -102,7 +129,7 @@ export default function WalletModal({isEnabled, setIsEnabled} : WalletModalProps
                                         <div className="row-span-1 flex justify-around">
                                             {/* Wallet connect */}
                                             <div
-                                                onClick={() => connect()}
+                                                onClick={() => connect("walletConnect")}
                                                 className="  p-3 w-32 bg-white dark:bg-[#202225]  dark:text-gray-200 text-gray-900 flex flex-col rounded-md cursor-pointer"
                                             >
                                                 <img
@@ -116,7 +143,7 @@ export default function WalletModal({isEnabled, setIsEnabled} : WalletModalProps
                                             </div>
                                             {/* Binance wallet */}
                                             <div
-                                                // onClick={() => connect("binanceWallet")}
+                                                onClick={() => connect("binanceWallet")}
                                                 className="  p-3 w-32 bg-white dark:bg-[#202225]  dark:text-gray-200 text-gray-900 flex flex-col rounded-md cursor-pointer"
                                             >
                                                 <img
