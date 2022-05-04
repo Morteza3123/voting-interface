@@ -5,6 +5,10 @@ import Image from "next/image";
 import Hamburger from 'hamburger-react';
 import WalletModal from './WalletModal';
 import { useDispatch, useSelector, RootStateOrAny } from "react-redux";
+import { walletConnect } from './Connectwallet';
+import { updateAccount, updateLibrary } from '../state/actions/ConnectActions';
+import { metaMask } from '../connectors/metamask';
+import { bscConnector } from './Binance';
 
 
 export default function Navbar() {
@@ -12,8 +16,44 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
 
+  const dispatch = useDispatch(); //* Use "UseDispatch" for save data in redux *//
+
   const walletAddress = useSelector((state: RootStateOrAny) => state.ConnectReducers.account); //* Get the wallet address from redux store *//
-    console.log(walletAddress)
+
+
+  const disconnect = async () => {
+
+    const connectedWallet = localStorage.getItem("voting-Wallet");
+    if (connectedWallet === "trustWallet") {
+      await walletConnect.deactivate();
+      localStorage.removeItem("voting-Wallet");
+      dispatch(updateAccount(""));
+      dispatch(updateLibrary(null));
+      location.reload()
+      //* *//
+  } else if (connectedWallet === "metaMask") {
+      await metaMask.deactivate();
+      localStorage.removeItem("voting-Wallet");
+      dispatch(updateAccount(""));
+      dispatch(updateLibrary(null));
+      location.reload()
+      //* *//
+  } else if (connectedWallet === "walletConnect") {
+      await walletConnect.deactivate();
+      localStorage.removeItem("voting-Wallet");
+      dispatch(updateAccount(""));
+      dispatch(updateLibrary(null));
+      location.reload()
+      //* *//
+  } else if (connectedWallet === "binanceWallet") {
+      await bscConnector.deactivate();
+      localStorage.removeItem("voting-Wallet");
+      dispatch(updateAccount(""));
+      dispatch(updateLibrary(null));
+      location.reload()
+    }
+  }
+
   return (
     <>
       <div className='bg-[#2d2a2a] w-full h-16 border-b-3 flex items-center py-8 px-3 vs:justify-between'>
@@ -43,18 +83,20 @@ export default function Navbar() {
             <Link href='/Candidates'>Candidates</Link>
           </li>
 
-          {walletAddress ? (
 
+          <div className='flex'>
+
+          {walletAddress ? (
             <button
-            className="bg-blue-600 dark:bg-blue-800 dark:text-gray-200  vs:text-xs sm:text-base p-2 px-4 rounded-xl text-slate-100 font-bold relative overflow-hidden cursor-default"
-            title="Wallet Address"
+              className="bg-blue-600 dark:bg-blue-800 dark:text-gray-200  vs:text-xs sm:text-base p-2 px-4 rounded-xl text-slate-100 font-bold relative overflow-hidden cursor-default"
+              title="Wallet Address"
             >
-              <div className="defaultBtn">
-              {`${walletAddress.slice(0, 5)}....${walletAddress.slice(
-                  -6,
-                  -1
-              )}`}
-              </div>
+                <div className="defaultBtn">
+                    {`${walletAddress.slice(0, 5)}....${walletAddress.slice(
+                        -6,
+                        -1
+                    )}`}
+                </div>
             </button>
           ) : (
             <button
@@ -64,6 +106,11 @@ export default function Navbar() {
             </button>
           )}
 
+          {walletAddress ? (
+          <button className='btn bg-red-500' title='disconnect' onClick={() => disconnect()}>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
+          </button>) : null}
+          </div>
         </ul>
 
       </div>
@@ -104,26 +151,34 @@ export default function Navbar() {
                     >
                         <Link href="/candidates">Candidates</Link>
                     </li>
-                    {walletAddress ? (
 
-                        <button
-                        className="bg-blue-600 dark:bg-blue-800 dark:text-gray-200  vs:text-xs sm:text-base p-2 px-4 rounded-xl text-slate-100 font-bold relative overflow-hidden cursor-default"
-                        title="Wallet Address"
-                        >
-                          <div className="defaultBtn">
-                          {`${walletAddress.slice(0, 5)}....${walletAddress.slice(
-                              -6,
-                              -1
-                          )}`}
-                          </div>
-                        </button>
-                        ) : (
-                        <button
-                        onClick={() => setIsEnabled(true)}
-                        className='btn btn-primary mb-1'>
-                            Connect
-                        </button>
-                        )}
+
+                    <div className='flex'>
+                      {walletAddress ? (
+                          <button
+                          className="bg-blue-600 dark:bg-blue-800 dark:text-gray-200  vs:text-xs sm:text-base p-2 px-4 rounded-xl text-slate-100 font-bold relative overflow-hidden cursor-default"
+                          title="Wallet Address"
+                          >
+                            <div className="defaultBtn">
+                            {`${walletAddress.slice(0, 5)}....${walletAddress.slice(
+                                -6,
+                                -1
+                            )}`}
+                            </div>
+                          </button>
+                          ) : (
+                          <button
+                          onClick={() => setIsEnabled(true)}
+                          className='btn btn-primary mb-1'>
+                              Connect
+                          </button>
+                          )}
+                        
+                        {walletAddress ? (
+                        <button className='btn bg-red-500' title='disconnect'onClick={() => disconnect()}>
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                        </button>) : null}
+                      </div>
           </ul>
         </div>
       ) : ("")}

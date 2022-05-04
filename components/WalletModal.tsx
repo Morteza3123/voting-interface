@@ -23,25 +23,21 @@ export default function WalletModal({isEnabled, setIsEnabled} : WalletModalProps
             setIsEnabled(!isEnabled);
             await walletConnect.activate();
             localStorage.setItem("voting-Wallet", key);
-            router.push("/account");
             //* *//
         } else if (key === "metaMask") {
             setIsEnabled(!isEnabled);
             await metaMask.activate();
             localStorage.setItem("voting-Wallet", key);
-            router.push("/account");
             //* *//
         } else if (key === "walletConnect") {
             setIsEnabled(!isEnabled);
             await walletConnect.activate();
             localStorage.setItem("voting-Wallet", key);
-            router.push("/account");
             //* *//
         } else if (key === "binanceWallet") {
             setIsEnabled(!isEnabled);
             await bscConnector.activate();
             localStorage.setItem("voting-Wallet", key);
-            router.push("/account");
             //* *//
         }
     };
